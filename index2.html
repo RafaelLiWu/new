@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-published="false">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light dark">
+<meta name="description" content="Biblioteca de light novels.">
+<title>Minha Biblioteca</title>
+<style>
+:root{
+  color-scheme:light;
+  --bg:#f7f5f1;--surface:#fffefa;--ink:#292723;--muted:#78736b;
+  --line:#e5dfd5;--soft:#eeebe4;--accent:#785941;--on-accent:#fff;
+  --danger:#b23c3c;--shadow:0 16px 45px #3425180b;
+}
+html[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#181917;--surface:#22231f;--ink:#eeeae1;--muted:#aaa79f;
+  --line:#393a33;--soft:#2c2d27;--accent:#dfbb91;--on-accent:#252018;
+  --danger:#ff9d9d;--shadow:0 16px 45px #0002;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.6 system-ui,sans-serif}
+button,input,textarea,select{font:inherit}
+button,a,input,textarea,select{touch-action:manipulation}
+button{cursor:pointer}
+button:disabled{opacity:.4;cursor:default}
+a{color:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible,summary:focus-visible{
+  outline:3px solid var(--accent);outline-offset:3px;
+}
+button,input,textarea,select{border:1px solid var(--line);border-radius:9px}
+button{background:var(--surface);color:var(--ink);padding:9px 14px;font-weight:600}
+button:hover:not(:disabled){background:var(--soft)}
+button.primary{background:var(--accent);color:var(--on-accent);border-color:var(--accent)}
+button.primary:hover{filter:brightness(.94);background:var(--accent)}
+button.danger{color:var(--danger)}
+button.small{font-size:12px;padding:6px 10px}
+input,textarea,select{width:100%;background:var(--bg);color:var(--ink);padding:11px 12px}
+input[type="checkbox"]{width:18px;height:18px;accent-color:var(--accent)}
+textarea{resize:vertical;line-height:1.7}
+input[type="file"]{max-width:100%}
+label{display:grid;gap:6px;font-size:13px;font-weight:650}
+small,.muted{color:var(--muted)}
+h1,h2,h3,p{margin-top:0}
+h1{font:normal clamp(32px,5vw,54px)/1.13 Georgia,serif;letter-spacing:-.035em}
+h2{font:normal 27px/1.25 Georgia,serif}
+h3{font-size:17px}
+p{overflow-wrap:anywhere}
+[hidden]{display:none!important}
+.topbar{
+  position:sticky;top:0;z-index:20;background:var(--surface);
+  border-bottom:1px solid var(--line);padding:13px max(18px,calc((100vw - 1260px)/2));
+  display:flex;align-items:center;justify-content:space-between;gap:15px;
+}
+.brand{display:flex;gap:10px;align-items:center;text-decoration:none;font-weight:750;white-space:nowrap}
+.brand-mark{background:var(--accent);color:var(--on-accent);border-radius:8px;padding:4px 10px;font-family:Georgia,serif;font-size:21px}
+.actions{display:flex;align-items:center;flex-wrap:wrap;gap:8px}
+.shell{max-width:1260px;margin:auto;padding:44px 24px 90px}
+.eyebrow{color:var(--accent);font-size:11px;font-weight:800;letter-spacing:.16em;text-transform:uppercase;margin-bottom:13px}
+.hero{display:flex;align-items:flex-end;justify-content:space-between;gap:25px;margin:12px 0 30px}
+.hero h1{margin-bottom:12px}
+.hero p{max-width:610px;color:var(--muted);margin-bottom:0}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:15px;padding:22px;box-shadow:var(--shadow)}
+.toolbar{display:flex;gap:14px;align-items:center;justify-content:space-between;flex-wrap:wrap;margin-bottom:25px}
+.toolbar input{max-width:380px;background:var(--surface)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:22px}
+.book{overflow:hidden;padding:0;display:flex;flex-direction:column}
+.cover{
+  min-height:205px;padding:26px;color:#fff5e9;display:flex;flex-direction:column;justify-content:space-between;
+  background:linear-gradient(140deg,#665146,#322f39);border-bottom:1px solid var(--line);position:relative;
+}
+.cover::after{content:"";position:absolute;inset:12px;border:1px solid #ffffff30;pointer-events:none}
+.cover-number{font:italic 46px Georgia,serif;opacity:.5}
+.cover-title{font:24px/1.15 Georgia,serif;max-width:90%;overflow-wrap:anywhere;position:relative;z-index:1}
+.book:nth-child(3n+2) .cover{background:linear-gradient(140deg,#5b7169,#253b39)}
+.book:nth-child(3n) .cover{background:linear-gradient(140deg,#7c6575,#3a324c)}
+.book-body{padding:22px;flex:1;display:flex;flex-direction:column;gap:12px}
+.book-body h2{font-size:23px;margin:0;overflow-wrap:anywhere}
+.book-body p{margin:0}
+.synopsis{color:var(--muted);font-size:14px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.book-body .actions{margin-top:auto;padding-top:6px}
+.check{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);font-weight:500}
+.badge{font-size:11px;background:var(--soft);border-radius:30px;padding:4px 9px;display:inline-block;width:fit-content}
+.empty{text-align:center;padding:60px 25px;border:1px dashed var(--line);border-radius:14px}
+.empty h2{margin-bottom:12px}
+.editor-layout{display:grid;grid-template-columns:230px minmax(0,1fr);align-items:start;gap:26px}
+.outline{position:sticky;top:90px;max-height:calc(100vh - 115px);overflow:auto}
+.outline a{display:block;padding:6px 0;color:var(--muted);font-size:13px;text-decoration:none;overflow-wrap:anywhere}
+.outline a:hover{color:var(--accent)}
+.outline strong{display:block;margin:18px 0 3px;font-size:12px}
+.editor-main{display:grid;gap:22px;min-width:0}
+.fields{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.full{grid-column:1/-1}
+.section-head{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:18px}
+.section-head h2{margin:0}
+.section-head .actions{flex-shrink:0}
+.act-block{scroll-margin-top:90px}
+.act-header{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end}
+.chapter-editor{border-top:1px solid var(--line);margin-top:22px;padding-top:22px;scroll-margin-top:90px}
+.chapter-editor .chapter-body{min-height:260px;font-family:Georgia,serif;font-size:17px;margin-top:12px}
+.chapter-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.chapter-top span{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.07em}
+.chapter-footer{display:flex;align-items:center;justify-content:space-between;gap:15px;margin-top:10px}
+.chapter-footer label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted)}
+.chapter-footer select{width:auto;max-width:220px;font-size:12px;padding:5px}
+.save-state{font-size:12px;color:var(--muted);min-height:20px;margin-top:10px}
+.save-state.error{color:var(--danger)}
+details summary{cursor:pointer;font-weight:650}
+details[open] summary{margin-bottom:14px}
+.help{font-size:13px;color:var(--muted)}
+.bulk{min-height:200px;margin-bottom:10px;font-family:monospace;font-size:13px}
+.reader-layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:50px;align-items:start}
+.toc{position:sticky;top:90px;max-height:calc(100vh - 120px);overflow:auto}
+.toc summary{font-size:14px}
+.toc .act-heading{font-size:11px;text-transform:uppercase;color:var(--muted);font-weight:750;margin:22px 0 8px}
+.toc a{display:block;text-decoration:none;font-size:13px;padding:9px;border-radius:7px;overflow-wrap:anywhere}
+.toc a:hover,.toc a.active{background:var(--soft)}
+.toc a.active{color:var(--accent);font-weight:750}
+.reading{max-width:740px;min-width:0;margin:auto;width:100%}
+.reading h1{font-size:clamp(31px,4vw,45px);margin:25px 0 35px;overflow-wrap:anywhere}
+.reading-controls{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:35px}
+.prose{font:var(--reading-size,20px)/1.95 Georgia,"Times New Roman",serif;overflow-wrap:anywhere;min-height:35vh}
+.prose p{margin:0 0 1.35em;white-space:pre-wrap}
+.bottom-nav{display:flex;justify-content:space-between;align-items:center;gap:12px;border-top:1px solid var(--line);margin-top:45px;padding-top:25px}
+.reader-counter{color:var(--muted);font-size:12px}
+.notice{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:50;max-width:min(600px,92vw);padding:12px 20px;border:1px solid var(--line);border-radius:10px;background:var(--surface);box-shadow:0 8px 35px #0002;font-size:14px}
+html[data-published="true"] .author-only{display:none!important}
+@media(max-width:850px){
+  .editor-layout,.reader-layout{grid-template-columns:1fr}
+  .outline{display:none}
+  .toc{position:static;max-height:350px}
+  .reader-layout{gap:30px}
+  .hero{align-items:flex-start;flex-direction:column}
+}
+@media(max-width:560px){
+  .topbar{padding:10px 14px;gap:8px}
+  .brand{font-size:13px}
+  .brand-mark{font-size:18px}
+  .topbar button{padding:8px;font-size:12px}
+  .shell{padding:28px 16px 75px}
+  .panel{padding:17px}
+  .book{padding:0}
+  .fields{grid-template-columns:1fr}
+  .act-header{grid-template-columns:1fr}
+  .chapter-top{align-items:flex-start;flex-direction:column}
+  .chapter-footer{align-items:flex-start;flex-direction:column}
+  .section-head{align-items:flex-start;flex-direction:column}
+  .reader-counter{display:none}
+  .cover{min-height:180px}
+  .toolbar input{max-width:none}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{scroll-behavior:auto!important;transition:none!important}
+}
+@media print{
+  .topbar,.toc,.reading-controls,.bottom-nav,.notice{display:none!important}
+  body{background:white;color:black}
+  .reader-layout{display:block}
+  .shell{padding:0}
+  .prose{font-size:12pt}
+}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <a class="brand" href="#biblioteca"><span class="brand-mark">N</span> Minha Biblioteca</a>
+  <nav class="actions" aria-label="Menu principal">
+    <button type="button" data-action="library">Biblioteca</button>
+    <button type="button" data-action="open-editor" class="author-only">Editor</button>
+    <button type="button" data-action="theme" aria-label="Alternar tema claro e escuro" title="Alternar tema">◐ Tema</button>
+  </nav>
+</header>
+
+<main id="app" class="shell">
+  <p>Carregando a biblioteca…</p>
+</main>
+<div id="notice" class="notice" role="status" aria-live="polite" hidden></div>
+<input type="file" id="importFile" accept=".json,application/json" hidden>
+<noscript>Ative o JavaScript para abrir a biblioteca e navegar pelos capítulos.</noscript>
+
+<script type="application/json" id="library-data">
+{"schema":2,"id":"minha-biblioteca-v2","snapshot":"inicial","books":[]}
+</script>
+<script>
+(() => {
+  'use strict';
+
+  const $ = id => document.getElementById(id);
+  const published = document.documentElement.dataset.published === 'true';
+  const template = document.documentElement.cloneNode(true);
+  const uid = () => 'n' + (
+    globalThis.crypto?.randomUUID?.() ||
+    Date.now().toString(36) + Math.random().toString(36).slice(2)
+  );
+  const E = value => String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  }[char]));
+  const words = text => (text.trim().match(/\S+/g) || []).length;
+  const countChapters = book => book.acts.reduce((n,a) => n + a.chapters.length,0);
+  const countWords = book => book.acts.reduce(
+    (n,a) => n + a.chapters.reduce((s,c) => s + words(c.text),0),0
+  );
+  const chapter = title => ({id:uid(),title,text:''});
+  const act = (number,withChapters=false) => ({
+    id:uid(),title:'Ato ' + number,
+    chapters:withChapters
+      ? Array.from({length:4},(_,i) => chapter('Capítulo ' + ((number-1)*4+i+1)))
+      : []
+  });
+  const newBook = () => ({
+    id:uid(),title:'Nova light novel',author:'',synopsis:'',include:true,
+    acts:Array.from({length:4},(_,i) => act(i+1,true))
+  });
+
+  function notify(message) {
+    $('notice').textContent = message;
+    $('notice').hidden = false;
+    clearTimeout(notify.timer);
+    notify.timer = setTimeout(() => $('notice').hidden = true,5000);
+  }
+
+  function readStorage(key) {
+    try { return localStorage.getItem(key); }
+    catch { return null; }
+  }
+
+  function writePreference(key,value) {
+    try { localStorage.setItem(key,value); } catch {}
+  }
+
+  function validate(value) {
+    if (!value || value.schema !== 2 || typeof value.id !== 'string' ||
+        typeof value.snapshot !== 'string' || !Array.isArray(value.books)) {
+      throw new Error('Estrutura de biblioteca inválida.');
+    }
+    const ids = new Set();
+    const validId = id => {
+      if (typeof id !== 'string' || !/^[a-zA-Z0-9_-]{1,100}$/.test(id) || ids.has(id)) {
+        throw new Error('Identificador inválido ou repetido.');
+      }
+      ids.add(id);
+      return id;
+    };
+    const str = value => {
+      if (typeof value !== 'string') throw new Error('Campo de texto inválido.');
+      return value;
+    };
+    return {
+      schema:2,id:value.id,snapshot:value.snapshot,
+      books:value.books.map(b => {
+        if (!b || !Array.isArray(b.acts)) throw new Error('Atos inválidos.');
+        return {
+          id:validId(b.id),title:str(b.title),author:str(b.author ?? ''),
+          synopsis:str(b.synopsis ?? ''),include:b.include !== false,
+          acts:b.acts.map(a => {
+            if (!a || !Array.isArray(a.chapters)) throw new Error('Capítulos inválidos.');
+            return {
+              id:validId(a.id),title:str(a.title),
+              chapters:a.chapters.map(c => {
+                if (!c) throw new Error('Capítulo inválido.');
+                return {id:validId(c.id),title:str(c.title),text:str(c.text)};
+              })
+            };
+          })
+        };
+      })
+    };
+  }
+
+  function convertOld(value) {
+    if (!value || typeof value.bookTitle !== 'string' ||
+        !Array.isArray(value.chapters) ||
+        !value.chapters.every(c => c && Number.isInteger(c.act) && c.act > 0 &&
+          typeof c.title === 'string' && typeof c.text === 'string')) {
+      throw new Error('Backup antigo inválido.');
+    }
+    const book = {
+      id:uid(),title:value.bookTitle,author:'',synopsis:'',include:true,acts:[]
+    };
+    const groups = new Map();
+    value.chapters.forEach(c => {
+      if (!groups.has(c.act)) {
+        const a = {id:uid(),title:'Ato ' + c.act,chapters:[]};
+        groups.set(c.act,a);
+        book.acts.push(a);
+      }
+      groups.get(c.act).chapters.push({id:uid(),title:c.title,text:c.text});
+    });
+    return [book];
+  }
+
+  let data;
+  try {
+    data = validate(JSON.parse($('library-data').textContent));
+  } catch {
+    $('app').textContent = 'Não foi possível abrir os dados incorporados neste HTML.';
+    return;
+  }
+
+  const saveKey = 'novel-studio:' + data.id + ':' + data.snapshot;
+  if (!published) {
+    try {
+      const saved = readStorage(saveKey);
+      if (saved) data = validate(JSON.parse(saved));
+    } catch {
+      notify('O rascunho local não pôde ser lido. Foram abertos os dados deste HTML.');
+    }
+  }
+
+  let savedOK = true;
+  let saveTimer;
+  let selectedId = data.books[0]?.id || '';
+  let readingSize = Math.max(16,Math.min(28,Number(readStorage('novel-font')) || 20));
+  let lastFocusTarget = null;
+
+  const savedTheme = readStorage('novel-theme');
+  document.documentElement.dataset.theme = savedTheme ||
+    (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+  document.documentElement.style.setProperty('--reading-size',readingSize + 'px');
+
+  function save() {
+    if (published) return;
+    clearTimeout(saveTimer);
+    try {
+      localStorage.setItem(saveKey,JSON.stringify(data));
+      savedOK = true;
+      updateSaveState('Salvo neste navegador.');
+    } catch {
+      savedOK = false;
+      updateSaveState('Não salvo no navegador. Baixe o editor HTML ou um backup JSON.',true);
+    }
+  }
+
+  function scheduleSave() {
+    updateSaveState('Salvando…');
+    clearTimeout(saveTimer);
+    saveTimer = setTimeout(save,450);
+  }
+
+  function updateSaveState(message,error=false) {
+    const target = $('saveState');
+    if (!target) return;
+    target.textContent = message;
+    target.classList.toggle('error',error);
+  }
+
+  function route() {
+    const [view,id,chapterId] = location.hash.slice(1).split('/');
+    return {view:view || 'biblioteca',id,chapterId};
+  }
+
+  function go(hash) {
+    save();
+    if (location.hash === hash) render();
+    else location.hash = hash;
+  }
+
+  function selectedBook() {
+    return data.books.find(b => b.id === selectedId) || data.books[0];
+  }
+
+  function activeBook() {
+    return data.books.find(b => b.id === route().id);
+  }
+
+  function bookLabel(book) {
+    return book.title.trim() || 'Novel sem título';
+  }
+
+  function flatten(book) {
+    return book.acts.flatMap((a,ai) =>
+      a.chapters.map((c,ci) => ({...c,act:a.title,ai,ci}))
+    );
+  }
+
+  function readingLink(book) {
+    const list = flatten(book);
+    const remembered = readStorage('novel-progress:' + data.id + ':' + book.id);
+    const current = list.find(c => c.id === remembered) || list[0];
+    return '#ler/' + book.id + (current ? '/' + current.id : '');
+  }
+
+  function renderLibrary() {
+    document.title = 'Minha Biblioteca';
+    const total = data.books.length;
+    $('app').innerHTML = `
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Histórias para ficar mais um capítulo</p>
+          <h1>Sua próxima história<br>começa aqui.</h1>
+          <p>Escolha uma light novel e entre no seu universo.
+          Sua leitura continua do último capítulo aberto neste navegador.</p>
+        </div>
+        ${published ? '' : '<button class="primary" data-action="new-book">＋ Nova light novel</button>'}
+      </section>
+
+      <div class="toolbar">
+        <input id="searchBooks" type="search" placeholder="Buscar por título ou autor…" aria-label="Buscar light novels">
+        <span class="muted">${total} ${total === 1 ? 'obra na biblioteca' : 'obras na biblioteca'}</span>
+      </div>
+
+      ${published ? '' : `
+        <div class="panel" style="margin-bottom:25px">
+          <div class="section-head" style="margin-bottom:10px">
+            <div>
+              <strong>Prepare sua biblioteca para publicar</strong>
+              <p class="help" style="margin:5px 0 0">
+                Marque as obras que devem aparecer no site. O HTML de leitura reúne todas as selecionadas.
+              </p>
+            </div>
+            <button class="primary" data-action="export-public">Exportar site HTML</button>
+          </div>
+          <div class="actions">
+            <button class="small" data-action="export-editor">Baixar editor HTML</button>
+            <button class="small" data-action="backup">Backup JSON</button>
+            <button class="small" data-action="import">Importar backup</button>
+            <button class="small" data-action="select-all">Selecionar todas</button>
+          </div>
+          <div id="saveState" class="save-state" role="status"></div>
+        </div>
+      `}
+
+      <section class="grid" id="bookGrid" aria-label="Light novels">
+        ${data.books.map((b,i) => `
+          <article class="book panel" data-book-card="${E(b.id)}"
+            data-search="${E((b.title+' '+b.author).toLocaleLowerCase('pt-BR'))}">
+            <div class="cover" aria-hidden="true">
+              <span class="cover-number">${String(i+1).padStart(2,'0')}</span>
+              <span class="cover-title">${E(bookLabel(b))}</span>
+            </div>
+            <div class="book-body">
+              <h2>${E(bookLabel(b))}</h2>
+              <p class="help">${E(b.author || 'Autor não informado')}</p>
+              <span class="badge">${b.acts.length} atos · ${countChapters(b)} capítulos</span>
+              <p class="synopsis">${E(b.synopsis || 'Uma nova história espera por você.')}</p>
+              ${published ? '' : `
+                <label class="check">
+                  <input type="checkbox" data-include="${E(b.id)}" ${b.include ? 'checked' : ''}>
+                  Incluir no site exportado
+                </label>
+              `}
+              <div class="actions">
+                <button class="primary" data-action="read-book" data-book="${E(b.id)}">Ler novel →</button>
+                ${published ? '' : `<button data-action="edit-book" data-book="${E(b.id)}">Editar</button>`}
+              </div>
+            </div>
+          </article>
+        `).join('')}
+      </section>
+
+      ${total ? '<p id="noResults" class="empty" hidden>Nenhuma obra corresponde à busca.</p>' : `
+        <div class="empty">
+          <h2>${published ? 'A biblioteca ainda está vazia.' : 'Sua primeira história começa com uma página.'}</h2>
+          <p class="muted">${published ? 'Volte mais tarde para encontrar novas histórias.' : 'Crie uma novel com 4 atos e 16 capítulos prontos para preencher.'}</p>
+          ${published ? '' : '<button class="primary" data-action="new-book">Criar primeira novel</button>'}
+        </div>
+      `}
+    `;
+    if (!published) updateSaveState(
+      savedOK ? 'As alterações são salvas neste navegador. Faça backups para guardar uma cópia.' :
+      'Armazenamento indisponível. Baixe o editor HTML ou um backup JSON.',!savedOK
+    );
+  }
+
+  function renderEditor(book) {
+    selectedId = book.id;
+    document.title = 'Editar — ' + bookLabel(book);
+    $('app').innerHTML = `
+      <section class="hero">
+        <div>
+          <p class="eyebrow">Seu espaço de escrita</p>
+          <h1>Uma história.<br>Todos os capítulos.</h1>
+          <p>Edite tudo nesta página. Títulos dos atos e capítulos podem ser alterados livremente.</p>
+        </div>
+        <div class="actions">
+          <button data-action="read-book" data-book="${E(book.id)}">Prévia da leitura</button>
+          <button class="primary" data-action="export-public">Exportar site HTML</button>
+        </div>
+      </section>
+
+      <div class="editor-layout">
+        <aside class="outline panel" aria-label="Navegação do editor">
+          <label>Light novel
+            <select id="bookSelect">
+              ${data.books.map(b => `<option value="${E(b.id)}" ${b.id===book.id?'selected':''}>${E(bookLabel(b))}</option>`).join('')}
+            </select>
+          </label>
+          <button style="width:100%;margin-top:12px" data-action="new-book">＋ Nova novel</button>
+          <div id="outlineLinks"></div>
+          <hr style="border:0;border-top:1px solid var(--line);margin:20px 0">
+          <button class="small" data-action="export-editor">Baixar editor HTML</button>
+          <p class="help" style="margin:10px 0 0">Essa cópia mantém todas as obras e permite continuar editando em outro computador.</p>
+        </aside>
+
+        <div class="editor-main">
+          <section class="panel" id="bookDetails" style="scroll-margin-top:90px">
+            <div class="section-head">
+              <h2>Sobre a light novel</h2>
+              <button class="small danger" data-action="delete-book">Excluir novel</button>
+            </div>
+            <div class="fields">
+              <label>Título
+                <input data-book-field="title" value="${E(book.title)}" placeholder="Título da light novel">
+              </label>
+              <label>Autor
+                <input data-book-field="author" value="${E(book.author)}" placeholder="Seu nome ou pseudônimo">
+              </label>
+              <label class="full">Sinopse
+                <textarea data-book-field="synopsis" rows="3" placeholder="O que torna esta história especial?">${E(book.synopsis)}</textarea>
+              </label>
+              <label class="check full">
+                <input type="checkbox" data-include="${E(book.id)}" ${book.include?'checked':''}>
+                Incluir esta novel no site exportado
+              </label>
+            </div>
+            <div class="actions" style="margin-top:18px">
+              <button class="small" data-action="backup">Backup de todas as novels</button>
+              <button class="small" data-action="import">Importar backup</button>
+              <button class="small" data-action="save">Salvar agora</button>
+            </div>
+            <div id="saveState" class="save-state" role="status"></div>
+            <p id="bookStats" class="help" style="margin-bottom:0"></p>
+          </section>
+
+          <details class="panel">
+            <summary>Já escreveu? Cole o livro inteiro de uma vez</summary>
+            <p class="help">
+              Use títulos em linhas separadas, como no exemplo.
+              Se não informar atos, os capítulos serão agrupados de quatro em quatro.
+              A importação substitui os atos e capítulos desta novel após sua confirmação.
+            </p>
+            <label for="bulkText">Texto completo</label>
+            <textarea id="bulkText" class="bulk" placeholder="Ato I — O encontro&#10;Capítulo 1 — A primeira impressão&#10;Texto do capítulo...&#10;&#10;Capítulo 2 — Uma surpresa&#10;Texto do capítulo..."></textarea>
+            <button data-action="bulk-import">Identificar e preencher capítulos</button>
+          </details>
+
+          ${book.acts.map((a,ai) => `
+            <section class="panel act-block" id="act-${E(a.id)}">
+              <div class="act-header">
+                <label>Nome do ato ${ai+1}
+                  <input data-act-title="${ai}" value="${E(a.title)}" placeholder="Nome do ato">
+                </label>
+                <div class="actions">
+                  <button class="small" data-action="act-up" data-a="${ai}" ${ai===0?'disabled':''} aria-label="Mover ato ${ai+1} para cima">↑</button>
+                  <button class="small" data-action="act-down" data-a="${ai}" ${ai===book.acts.length-1?'disabled':''} aria-label="Mover ato ${ai+1} para baixo">↓</button>
+                  <button class="small danger" data-action="delete-act" data-a="${ai}">Excluir ato</button>
+                </div>
+              </div>
+
+              ${a.chapters.map((c,ci) => `
+                <section class="chapter-editor" id="chapter-${E(c.id)}">
+                  <div class="chapter-top">
+                    <span>Capítulo ${ci+1} deste ato</span>
+                    <div class="actions">
+                      <button class="small" data-action="chapter-up" data-a="${ai}" data-c="${ci}" ${ci===0?'disabled':''} aria-label="Mover capítulo para cima">↑</button>
+                      <button class="small" data-action="chapter-down" data-a="${ai}" data-c="${ci}" ${ci===a.chapters.length-1?'disabled':''} aria-label="Mover capítulo para baixo">↓</button>
+                      <button class="small danger" data-action="delete-chapter" data-a="${ai}" data-c="${ci}">Excluir</button>
+                    </div>
+                  </div>
+                  <label>Título do capítulo
+                    <input data-chapter-field="title" data-a="${ai}" data-c="${ci}" value="${E(c.title)}" placeholder="Título do capítulo">
+                  </label>
+                  <label style="margin-top:12px">Texto
+                    <textarea class="chapter-body" data-chapter-field="text" data-a="${ai}" data-c="${ci}" spellcheck="true" placeholder="Escreva ou cole o capítulo aqui. Separe os parágrafos com uma linha em branco.">${E(c.text)}</textarea>
+                  </label>
+                  <div class="chapter-footer">
+                    <small id="words-${E(c.id)}">${words(c.text)} palavras</small>
+                    <label>Mover para
+                      <select data-move-chapter data-a="${ai}" data-c="${ci}">
+                        ${book.acts.map((other,oi) => `<option value="${oi}" ${oi===ai?'selected':''}>${E(other.title || 'Ato '+(oi+1))}</option>`).join('')}
+                      </select>
+                    </label>
+                  </div>
+                </section>
+              `).join('')}
+
+              ${a.chapters.length ? '' : '<p class="help" style="margin-top:20px">Este ato ainda não tem capítulos.</p>'}
+              <button style="margin-top:20px" data-action="add-chapter" data-a="${ai}">＋ Adicionar capítulo neste ato</button>
+            </section>
+          `).join('')}
+
+          <button data-action="add-act">＋ Adicionar ato</button>
+          <p class="help">O salvamento automático fica neste navegador. Baixe um backup JSON ou o editor HTML para guardar seu trabalho fora dele.</p>
+        </div>
+      </div>
+    `;
+    updateEditorMeta(book);
+    updateSaveState(savedOK ? 'Salvo neste navegador.' :
+      'Armazenamento indisponível. Baixe o editor HTML ou um backup JSON.',!savedOK);
+  }
+
+  function updateEditorMeta(book) {
+    if ($('bookStats')) $('bookStats').textContent =
+      `${book.acts.length} atos · ${countChapters(book)} capítulos · ${countWords(book).toLocaleString('pt-BR')} palavras`;
+    if ($('outlineLinks')) $('outlineLinks').innerHTML = `
+      <a href="#bookDetails" data-jump="bookDetails">Sobre a novel</a>
+      ${book.acts.map((a,ai) => `
+        <strong><a href="#act-${E(a.id)}" data-jump="act-${E(a.id)}">${E(a.title || 'Ato '+(ai+1))}</a></strong>
+        ${a.chapters.map(c => `<a href="#chapter-${E(c.id)}" data-jump="chapter-${E(c.id)}">${E(c.title || 'Sem título')}</a>`).join('')}
+      `).join('')}
+    `;
+    const select = $('bookSelect');
+    if (select) {
+      const option = Array.from(select.options).find(o => o.value === book.id);
+      if (option) option.textContent = bookLabel(book);
+    }
+  }
+
+  function renderReader(book,chapterId) {
+    selectedId = book.id;
+    const list = flatten(book);
+    if (!list.length) {
+      $('app').innerHTML = `
+        <div class="empty">
+          <h1>${E(bookLabel(book))}</h1>
+          <p>Esta novel ainda não tem capítulos.</p>
+          <button data-action="library">Voltar à biblioteca</button>
+          ${published?'':`<button data-action="edit-book" data-book="${E(book.id)}">Adicionar capítulos</button>`}
+        </div>`;
+      return;
+    }
+    let index = list.findIndex(c => c.id === chapterId);
+    if (index < 0) index = 0;
+    const current = list[index];
+    writePreference('novel-progress:' + data.id + ':' + book.id,current.id);
+    document.title = (current.title || 'Sem título') + ' — ' + bookLabel(book);
+
+    $('app').innerHTML = `
+      <div class="reader-layout">
+        <aside>
+          <details class="toc panel" ${innerWidth>850?'open':''}>
+            <summary>Sumário · ${E(bookLabel(book))}</summary>
+            <nav aria-label="Capítulos">
+              ${book.acts.map((a,ai) => `
+                <div class="act-heading">${E(a.title || 'Ato '+(ai+1))}</div>
+                ${a.chapters.map(c => `
+                  <a href="#ler/${E(book.id)}/${E(c.id)}"
+                     ${c.id===current.id?'class="active" aria-current="page"':''}>
+                    ${E(c.title || 'Sem título')}
+                  </a>
+                `).join('')}
+              `).join('')}
+            </nav>
+          </details>
+        </aside>
+        <section class="reading">
+          <div class="reading-controls">
+            <button class="small" data-action="library">← Biblioteca</button>
+            <div class="actions">
+              <button class="small" data-action="font-down" aria-label="Diminuir texto">A−</button>
+              <button class="small" data-action="font-up" aria-label="Aumentar texto">A＋</button>
+            </div>
+          </div>
+          <p class="eyebrow">${E(current.act)} · Capítulo ${index+1}</p>
+          <h1 tabindex="-1" id="readingHeading">${E(current.title || 'Sem título')}</h1>
+          <p class="help">${E(bookLabel(book))} · ${Math.max(1,Math.ceil(words(current.text)/220))} min de leitura</p>
+          <article class="prose" aria-label="Texto do capítulo">
+            ${current.text.trim()
+              ? current.text.trim().split(/\n\s*\n/g).map(p => `<p>${E(p.trim())}</p>`).join('')
+              : '<p class="muted">Este capítulo ainda não tem texto.</p>'}
+          </article>
+          <nav class="bottom-nav" aria-label="Navegação entre capítulos">
+            <button data-action="read-chapter" data-book="${E(book.id)}"
+              data-chapter="${E(list[index-1]?.id || '')}" ${index===0?'disabled':''}>← Anterior</button>
+            <span class="reader-counter">${index+1} de ${list.length}</span>
+            ${index<list.length-1
+              ? `<button class="primary" data-action="read-chapter" data-book="${E(book.id)}" data-chapter="${E(list[index+1].id)}">Próximo →</button>`
+              : '<button class="primary" data-action="library">Voltar à biblioteca</button>'}
+          </nav>
+        </section>
+      </div>
+    `;
+  }
+
+  function render() {
+    const r = route();
+    const book = data.books.find(b => b.id === r.id);
+    if (r.view === 'editar' && book && !published) renderEditor(book);
+    else if (r.view === 'ler' && book) renderReader(book,r.chapterId);
+    else renderLibrary();
+  }
+
+  function download(name,text,type) {
+    const url = URL.createObjectURL(new Blob([text],{type}));
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = name;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url),30000);
+  }
+
+  function exportHTML(publicMode) {
+    save();
+    const books = publicMode ? data.books.filter(b => b.include) : data.books;
+    if (publicMode && !books.length) {
+      notify('Selecione pelo menos uma novel para exportar.');
+      return;
+    }
+    const embedded = {
+      ...data,
+      snapshot:uid(),
+      books:JSON.parse(JSON.stringify(books))
+    };
+    const clone = template.cloneNode(true);
+    clone.dataset.published = String(publicMode);
+    clone.removeAttribute('data-theme');
+    clone.querySelector('title').textContent = 'Minha Biblioteca';
+    clone.querySelector('#library-data').textContent =
+      JSON.stringify(embedded).replace(/</g,'\\u003c');
+    clone.querySelector('#app').innerHTML = '<p>Carregando a biblioteca…</p>';
+    clone.querySelector('#notice').hidden = true;
+    download(
+      publicMode ? 'index.html' : 'editor-novels.html',
+      '<!DOCTYPE html>\n' + clone.outerHTML,
+      'text/html;charset=utf-8'
+    );
+    notify(publicMode
+      ? 'HTML de leitura gerado com ' + books.length + ' novel(s).'
+      : 'Cópia editável gerada com todas as novels.'
+    );
+  }
+
+  function parseBook(text) {
+    const reAct = /^\s*Ato\s+([IVXLCDM]+|\d+)(?:\s*[:—–.-]\s*(.*))?\s*$/i;
+    const reChapter = /^\s*Cap[ií]tulo\s+(\d+)(?:\s*[:—–.-]\s*(.*))?\s*$/i;
+    const lines = text.replace(/\r\n?/g,'\n').split('\n');
+    const explicitActs = lines.some(line => reAct.test(line));
+    const acts = [];
+    let a = null;
+    let c = null;
+    let prefix = [];
+    const closeChapter = () => {
+      if (c) c.text = c.text.replace(/\n+$/,'');
+    };
+    for (const line of lines) {
+      const am = line.match(reAct);
+      const cm = line.match(reChapter);
+      if (am) {
+        closeChapter();
+        a = {id:uid(),title:line.trim(),chapters:[]};
+        acts.push(a);
+        c = null;
+      } else if (cm) {
+        closeChapter();
+        if (!a || (!explicitActs && a.chapters.length >= 4)) {
+          a = {id:uid(),title:'Ato '+(acts.length+1),chapters:[]};
+          acts.push(a);
+        }
+        c = {id:uid(),title:line.trim(),text:''};
+        a.chapters.push(c);
+      } else if (c) {
+        c.text += line + '\n';
+      } else if (line.trim()) {
+        prefix.push(line);
+      }
+    }
+    closeChapter();
+    const count = acts.reduce((n,item) => n+item.chapters.length,0);
+    if (!count) throw new Error('Nenhum capítulo identificado. Use “Capítulo 1 — Título” em uma linha separada.');
+    if (prefix.length) {
+      throw new Error('Há texto fora dos capítulos. Coloque o título da novel no campo próprio e inicie cada trecho com “Capítulo 1 — Título”.');
+    }
+    return acts;
+  }
+
+  function move(array,from,to) {
+    if (to < 0 || to >= array.length) return;
+    const [item] = array.splice(from,1);
+    array.splice(to,0,item);
+  }
+
+  function afterStructureChange(targetId) {
+    save();
+    render();
+    if (targetId) {
+      requestAnimationFrame(() => {
+        const target = $(targetId);
+        target?.scrollIntoView({block:'start'});
+        target?.querySelector('input,textarea,button')?.focus({preventScroll:true});
+      });
+    }
+  }
+
+  document.addEventListener('input',event => {
+    const el = event.target;
+    if (el.id === 'searchBooks') {
+      const query = el.value.toLocaleLowerCase('pt-BR').trim();
+      let visible = 0;
+      document.querySelectorAll('[data-book-card]').forEach(card => {
+        card.hidden = !card.dataset.search.includes(query);
+        if (!card.hidden) visible++;
+      });
+      if ($('noResults')) $('noResults').hidden = visible > 0;
+      return;
+    }
+    if (published) return;
+    const book = activeBook();
+    if (!book) return;
+    if (el.dataset.bookField) {
+      book[el.dataset.bookField] = el.value;
+    } else if (el.hasAttribute('data-act-title')) {
+      book.acts[Number(el.dataset.actTitle)].title = el.value;
+    } else if (el.dataset.chapterField) {
+      const c = book.acts[Number(el.dataset.a)].chapters[Number(el.dataset.c)];
+      c[el.dataset.chapterField] = el.value.replace(/\r\n?/g,'\n');
+      const counter = $('words-'+c.id);
+      if (counter) counter.textContent = words(c.text) + ' palavras';
+    } else return;
+    updateEditorMeta(book);
+    scheduleSave();
+  });
+
+  document.addEventListener('change',event => {
+    if (published) return;
+    const el = event.target;
+    if (el.id === 'bookSelect') {
+      go('#editar/'+el.value);
+      return;
+    }
+    if (el.dataset.include) {
+      const b = data.books.find(b => b.id === el.dataset.include);
+      if (b) { b.include = el.checked; save(); }
+      return;
+    }
+    if (el.hasAttribute('data-move-chapter')) {
+      const book = activeBook();
+      if (!book) return;
+      const from = Number(el.dataset.a);
+      const to = Number(el.value);
+      if (from === to) return;
+      const [c] = book.acts[from].chapters.splice(Number(el.dataset.c),1);
+      book.acts[to].chapters.push(c);
+      afterStructureChange('chapter-'+c.id);
+    }
+  });
+
+  document.addEventListener('click',event => {
+    const jump = event.target.closest('[data-jump]');
+    if (jump) {
+      event.preventDefault();
+      $(jump.dataset.jump)?.scrollIntoView({block:'start'});
+      return;
+    }
+
+    const button = event.target.closest('button[data-action]');
+    if (!button || button.disabled) return;
+    const action = button.dataset.action;
+
+    if (action === 'theme') {
+      const theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      document.documentElement.dataset.theme = theme;
+      writePreference('novel-theme',theme);
+      return;
+    }
+    if (action === 'library') { go('#biblioteca'); return; }
+    if (action === 'font-up' || action === 'font-down') {
+      readingSize = Math.max(16,Math.min(28,readingSize + (action==='font-up'?1:-1)));
+      document.documentElement.style.setProperty('--reading-size',readingSize+'px');
+      writePreference('novel-font',String(readingSize));
+      return;
+    }
+    if (action === 'read-book') {
+      const b = data.books.find(b => b.id === button.dataset.book);
+      if (b) go(readingLink(b));
+      return;
+    }
+    if (action === 'read-chapter') {
+      go('#ler/'+button.dataset.book+'/'+button.dataset.chapter);
+      return;
+    }
+
+    if (published) return;
+
+    if (action === 'new-book') {
+      const b = newBook();
+      data.books.push(b);
+      selectedId = b.id;
+      go('#editar/'+b.id);
+      return;
+    }
+    if (action === 'open-editor') {
+      const b = selectedBook();
+      if (b) go('#editar/'+b.id);
+      else {
+        const created = newBook();
+        data.books.push(created);
+        selectedId = created.id;
+        go('#editar/'+created.id);
+      }
+      return;
+    }
+    if (action === 'edit-book') {
+      go('#editar/'+button.dataset.book);
+      return;
+    }
+    if (action === 'export-public') { exportHTML(true); return; }
+    if (action === 'export-editor') { exportHTML(false); return; }
+    if (action === 'save') {
+      save();
+      notify(savedOK ? 'Alterações salvas neste navegador.' : 'Não foi possível salvar. Baixe uma cópia do editor ou backup.');
+      return;
+    }
+    if (action === 'backup') {
+      save();
+      download('backup-biblioteca.json',JSON.stringify(data,null,2),'application/json;charset=utf-8');
+      notify('Backup gerado com todas as novels.');
+      return;
+    }
+    if (action === 'import') {
+      $('importFile').click();
+      return;
+    }
+    if (action === 'select-all') {
+      data.books.forEach(b => b.include = true);
+      afterStructureChange();
+      return;
+    }
+
+    const book = activeBook();
+    if (!book) return;
+    const ai = Number(button.dataset.a);
+    const ci = Number(button.dataset.c);
+
+    if (action === 'delete-book') {
+      if (!confirm('Excluir “'+bookLabel(book)+'” e todos os seus textos? Faça um backup antes se quiser guardar uma cópia.')) return;
+      data.books = data.books.filter(b => b.id !== book.id);
+      selectedId = data.books[0]?.id || '';
+      go('#biblioteca');
+      return;
+    }
+    if (action === 'bulk-import') {
+      try {
+        const acts = parseBook($('bulkText').value);
+        const count = acts.reduce((n,a) => n+a.chapters.length,0);
+        if (!confirm(`Identificados ${acts.length} atos e ${count} capítulos. Substituir os atos e capítulos desta novel?`)) return;
+        book.acts = acts;
+        afterStructureChange('act-'+acts[0].id);
+        notify('Texto distribuído. Revise os títulos e a divisão dos capítulos.');
+      } catch (error) { notify(error.message); }
+      return;
+    }
+    if (action === 'add-act') {
+      const a = act(book.acts.length+1);
+      book.acts.push(a);
+      afterStructureChange('act-'+a.id);
+      return;
+    }
+    if (action === 'delete-act') {
+      if (!confirm('Excluir este ato e todos os seus capítulos?')) return;
+      book.acts.splice(ai,1);
+      afterStructureChange();
+      return;
+    }
+    if (action === 'act-up' || action === 'act-down') {
+      const id = book.acts[ai].id;
+      move(book.acts,ai,ai+(action==='act-up'?-1:1));
+      afterStructureChange('act-'+id);
+      return;
+    }
+    if (action === 'add-chapter') {
+      const c = chapter('Capítulo '+(countChapters(book)+1));
+      book.acts[ai].chapters.push(c);
+      afterStructureChange('chapter-'+c.id);
+      return;
+    }
+    if (action === 'delete-chapter') {
+      if (!confirm('Excluir este capítulo e seu texto?')) return;
+      book.acts[ai].chapters.splice(ci,1);
+      afterStructureChange('act-'+book.acts[ai].id);
+      return;
+    }
+    if (action === 'chapter-up' || action === 'chapter-down') {
+      const id = book.acts[ai].chapters[ci].id;
+      move(book.acts[ai].chapters,ci,ci+(action==='chapter-up'?-1:1));
+      afterStructureChange('chapter-'+id);
+    }
+  });
+
+  $('importFile').addEventListener('change',async event => {
+    if (published) return;
+    const file = event.target.files[0];
+    if (!file) return;
+    try {
+      const incoming = JSON.parse(await file.text());
+      const books = incoming.schema === 2 ? validate(incoming).books : convertOld(incoming);
+      if (!books.length) throw new Error('O backup não contém novels.');
+      books.forEach(b => {
+        b.id = uid();
+        b.acts.forEach(a => {
+          a.id = uid();
+          a.chapters.forEach(c => c.id = uid());
+        });
+      });
+      data.books.push(...books);
+      selectedId = books[0].id;
+      save();
+      go('#biblioteca');
+      notify(books.length+' novel(s) importada(s). As obras existentes foram mantidas.');
+    } catch (error) {
+      notify('Não foi possível importar: '+error.message);
+    } finally {
+      event.target.value = '';
+    }
+  });
+
+  window.addEventListener('hashchange',() => {
+    save();
+    render();
+    window.scrollTo({top:0,behavior:'instant'});
+    if (route().view === 'ler') $('readingHeading')?.focus({preventScroll:true});
+  });
+
+  window.addEventListener('pagehide',save);
+
+  window.addEventListener('beforeunload',event => {
+    if (published) return;
+    if (saveTimer) save();
+    if (!savedOK) {
+      event.preventDefault();
+      event.returnValue = '';
+    }
+  });
+
+  document.addEventListener('keydown',event => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's' && !published) {
+      event.preventDefault();
+      save();
+      notify(savedOK ? 'Alterações salvas neste navegador.' : 'Baixe um backup para guardar as alterações.');
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
